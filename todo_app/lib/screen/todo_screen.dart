@@ -63,32 +63,42 @@ class _TodoScreenState extends State<TodoScreen> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: todos.length,
-                itemBuilder: (context, index) {
-                  return CheckboxListTile(
-                    controlAffinity: ListTileControlAffinity.leading,
-                    secondary: IconButton(
-                        onPressed: () {
-                          todos.removeAt(index);
-                          setState(() {});
-                        },
-                        icon: Icon(Icons.delete)),
-                    onChanged: (v) {
-                      //logic to toggle isCompleted
-                      todos[index].completed = v!;
-                      setState(() {});
-                    },
-                    value: todos[index].completed,
-                    title: Text(todos[index].task!,
-                        style: todos[index].completed
-                            ? TextStyle(
-                                decoration: TextDecoration.lineThrough,
-                                color: Color(0xffff5500),
-                              )
-                            : TextStyle(fontWeight: FontWeight.w700)),
-                  );
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  fetchAllTodos();
                 },
+                child: ListView.builder(
+                  itemCount: todos.length,
+                  itemBuilder: (context, index) {
+                    return CheckboxListTile(
+                      controlAffinity: ListTileControlAffinity.leading,
+                      secondary: IconButton(
+                          onPressed: () async {
+                            //logic for delete
+                            // todos.removeAt(index);
+                            // setState(() {});
+                            await APICalls.deleteTodo(todos[index].id!);
+                            fetchAllTodos();
+                          },
+                          icon: Icon(Icons.delete)),
+                      onChanged: (v) async {
+                        //logic to toggle isCompleted
+                        // todos[index].completed = v!;
+                        // setState(() {});
+                        await APICalls.updateTodo(todos[index].id!, v!);
+                        fetchAllTodos();
+                      },
+                      value: todos[index].completed,
+                      title: Text(todos[index].task!,
+                          style: todos[index].completed
+                              ? TextStyle(
+                                  decoration: TextDecoration.lineThrough,
+                                  color: Color(0xffff5500),
+                                )
+                              : TextStyle(fontWeight: FontWeight.w700)),
+                    );
+                  },
+                ),
               ),
             )
           ],
