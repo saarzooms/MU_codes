@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:get_storage/get_storage.dart';
+import 'package:get_test_app/models/contact_model.dart';
+import 'localizations/add_translation.dart';
 import 'screens/contact_list_screen.dart';
 import 'screens/counter_screen.dart';
 import 'screens/first_screen.dart';
+import 'screens/home_screen.dart';
+import 'utils/my_bindings.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
   runApp(const MyApp());
 }
 
@@ -36,7 +41,29 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         // useMaterial3: true,
       ),
-      home: ContactListScreen(),
+      locale: Locale('en'),
+      translations: AddTranslation(),
+      initialBinding: MyBindings(),
+      getPages: [
+        GetPage(
+          name: '/',
+          page: () => HomeScreen(),
+        ),
+        GetPage(
+          name: '/contact',
+          page: () => ContactListScreen(),
+        ),
+        GetPage(
+          name: '/firstpage',
+          page: () => FirstScreen(),
+        ),
+        GetPage(
+            name: '/counterpage',
+            page: () => CounterScreen(),
+            transition: Transition.downToUp),
+      ],
+      initialRoute: '/',
+      // home: HomeScreen(),
     );
   }
 }

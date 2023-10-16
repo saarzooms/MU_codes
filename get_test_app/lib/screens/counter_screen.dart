@@ -6,7 +6,7 @@ import 'first_screen.dart';
 
 class CounterScreen extends StatelessWidget {
   CounterScreen({super.key});
-  CounterController controller = Get.put(CounterController());
+  CounterController controller = Get.find<CounterController>();
 
   @override
   Widget build(BuildContext context) {

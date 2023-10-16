@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "55936100529",
+    "project_id": "mu-test-app",
+    "storage_bucket": "mu-test-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:55936100529:android:5672808288f5c2ad2e1a90",
+        "android_client_info": {
+          "package_name": "com.allysoftsolutions.fire_flutter_test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5NVL4bUJyLJGQQnEoBiNYCzRcjwHf5lc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
