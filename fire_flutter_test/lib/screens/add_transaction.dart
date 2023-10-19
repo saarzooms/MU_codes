@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/firebase_operations.dart';
+import 'list_transcaction.dart';
 // import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class AddTransaction extends StatefulWidget {
@@ -18,47 +19,62 @@ class _AddTransactionState extends State<AddTransaction> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        TextField(
-          controller: descController,
-          decoration: InputDecoration(labelText: 'Description'),
-        ),
-        TextField(
-          controller: amntController,
-          decoration: InputDecoration(labelText: 'Amount'),
-        ),
-        Row(
-          children: [
-            Text('Income'),
-            Switch(value: isExpense, onChanged: (v) {}),
-            Text('Expense'),
-          ],
-        ),
-        TextField(
-          controller: dtController,
-          decoration: InputDecoration(
-            labelText: 'Date Time',
-            suffix: IconButton(
-              onPressed: () {
-                DatePickerDialog(
-                  initialEntryMode: DatePickerEntryMode.calendarOnly,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2021),
-                  lastDate: DateTime(2022),
-                );
-              },
-              icon: Icon(Icons.calendar_month),
-            ),
+        appBar: AppBar(actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ListTranscation(),
+                ),
+              );
+            },
+            icon: Icon(Icons.menu),
           ),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            FirebaseOperations.addTransction();
-          },
-          child: Text('Save Data'),
-        ),
-      ],
-    ));
+        ]),
+        body: Column(
+          children: [
+            TextField(
+              controller: descController,
+              decoration: InputDecoration(labelText: 'Description'),
+            ),
+            TextField(
+              controller: amntController,
+              decoration: InputDecoration(labelText: 'Amount'),
+            ),
+            Row(
+              children: [
+                Text('Income'),
+                Switch(value: isExpense, onChanged: (v) {}),
+                Text('Expense'),
+              ],
+            ),
+            TextField(
+              controller: dtController,
+              decoration: InputDecoration(
+                labelText: 'Date Time',
+                suffix: IconButton(
+                  onPressed: () {
+                    DatePickerDialog(
+                      initialEntryMode: DatePickerEntryMode.calendarOnly,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2021),
+                      lastDate: DateTime(2022),
+                    );
+                  },
+                  icon: Icon(Icons.calendar_month),
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                FirebaseOperations.addTransction(
+                    descController.text,
+                    int.parse(amntController.text),
+                    isExpense ? 'expense' : 'income');
+              },
+              child: Text('Save Data'),
+            ),
+          ],
+        ));
   }
 }
