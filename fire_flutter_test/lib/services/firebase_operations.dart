@@ -24,4 +24,14 @@ class FirebaseOperations {
     CollectionReference transaction = db.collection("transactions");
     return transaction.snapshots();
   }
+
+  static deleteTranscation(String id) {
+    String resp = '';
+    DocumentReference docRef = db.collection("transactions").doc(id);
+
+    docRef.delete().whenComplete(() {
+      resp = 'Transaction deleted successfully';
+    });
+    return resp;
+  }
 }

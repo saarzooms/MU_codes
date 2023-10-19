@@ -29,6 +29,19 @@ class _ListTranscationState extends State<ListTranscation> {
                       (e) => ListTile(
                         title: Text(e['description']),
                         subtitle: Text(e['amount'].toString()),
+                        trailing: IconButton(
+                          onPressed: () async {
+                            var res =
+                                await FirebaseOperations.deleteTranscation(
+                                    e.id);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(res),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.delete),
+                        ),
                       ),
                     )
                     .toList(),
