@@ -13,53 +13,73 @@ class ListTranscation extends StatefulWidget {
 
 class _ListTranscationState extends State<ListTranscation> {
   Stream<QuerySnapshot> collection = FirebaseOperations.fetchTransactions();
+  int balance = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('My Expenses'),
-        ),
-        body: StreamBuilder(
-          stream: collection,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView(
-                children: snapshot.data!.docs
-                    .map(
-                      (e) => ListTile(
-                        title: Text(e['description']),
-                        subtitle: Text(e['amount'].toString()),
-                        trailing: IconButton(
-                          onPressed: () async {
-                            var res =
-                                await FirebaseOperations.deleteTranscation(
-                                    e.id);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(res),
-                              ),
-                            );
-                          },
-                          icon: Icon(Icons.delete),
-                        ),
-                      ),
-                    )
-                    .toList(),
-              );
-            } else {
-              return Container();
-            }
-          },
-        )
+      appBar: AppBar(
+        title: Text('My Expenses'),
+      ),
+      body: Column(
+        children: [
+          Text('Balance:$balance'),
+          Expanded(
+            child: StreamBuilder(
+              stream: collection,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView(
+                    children: snapshot.data!.docs.map(
+                      (e) {
+                        print('bal ' + e['amount'] + ' ' + e['type']);
+                        if (e['type'] == 'expense') {
+                          balance -= int.parse(e['amount'].toString());
+                        } else {
+                          balance += int.parse(e['amount'].toString());
+                        }
+                        return ListTile(
+                          title: Text(e['description']),
+                          subtitle: Text(e['amount'].toString()),
+                          trailing: IconButton(
+                            onPressed: () async {
+                              var res =
+                                  await FirebaseOperations.deleteTranscation(
+                                      e.id);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(res),
+                                ),
+                              );
+                            },
+                            icon: Icon(Icons.delete),
+                          ),
+                        );
+                      },
+                    ).toList(),
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: Icon(Icons.add),
+      ),
 
-        // ListView.builder(
-        //   itemCount: 6,
-        //   itemBuilder: (context, index) {
-        //     return ListTile(
-        //       title: Text('Description'),
-        //     );
-        //   },
-        // ),
-        );
+      // ListView.builder(
+      //   itemCount: 6,
+      //   itemBuilder: (context, index) {
+      //     return ListTile(
+      //       title: Text('Description'),
+      //     );
+      //   },
+      // ),
+    );
   }
 }
